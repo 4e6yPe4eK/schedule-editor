@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPalette
 
 
 class TimeShow(QLineEdit):
@@ -7,11 +8,13 @@ class TimeShow(QLineEdit):
         super(TimeShow, self).__init__(*args, **kwargs)
 
         self.setObjectName("TimeShow")
+        self.setProperty('state', 'ok')
 
         self.last_ln = 0
         # self.setPlaceholderText("hh:mm-hh:mm")
         # self.setValidator(QRegExpValidator(QRegExp("(2[0-3]|[01][0-9]):([0-5]?[0-9])-(2[0-3]|[01]?[0-9]):([0-5]?[0-9])")))
         self.textEdited.connect(self.on_edit)
+        self.editingFinished.connect(self.colorize_errors)
         self.setMaxLength(11)
         self.selectionChanged.connect(self.anti_user)
         self.cursorPositionChanged.connect(self.anti_user)
@@ -82,5 +85,21 @@ class TimeShow(QLineEdit):
 
         return new_text
 
-    def setText(self, text):
-        super().setText(text)
+    def set_state(self, state: str = 'ok'):
+        """
+        :param state: One of following states: ("ok", "invalid", "collision")
+        :return: None
+        """
+        if state in ("ok", "invalid", "collision"):
+            self.setProperty('state', state)
+        self.style().unpolish(self)
+        self.style().polish(self)
+        self.update()
+
+    def colorize_errors(self):
+        if 0 < len(self.text()) < 11:
+            self.set_state('invalid')
+        else:
+            self.set_state('ok')
+            self.parent().parent().global_check()
+

@@ -185,6 +185,7 @@ class Table(QTableWidget):
         widget = SeparatedWidget(data.text(), SEP)
         self.setItem(row, col, None)
         self.setCellWidget(row, col, widget)
+        self.global_check()
 
     def line_edited(self, text):
         if not text and not self.line_last_text:
@@ -206,3 +207,6 @@ class Table(QTableWidget):
             for suggest in self.suggestions:
                 suggestions.append(buf[0] + extra + suggest)
             set_suggestions(self.line, suggestions)
+
+    def global_check(self):
+        self.parent().parent().parent().global_check()

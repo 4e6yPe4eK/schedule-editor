@@ -53,3 +53,16 @@ class SeparatedWidget(QWidget):
             label.setAlignment(Qt.AlignCenter)
             self.layout().addWidget(label)
             first = False
+
+    def set_state(self, state: str = 'ok'):
+        """
+        :param state: One of following states: ("ok", "invalid", "collision")
+        :return: None
+        """
+        for ind in range(self.layout().count()):
+            item = self.layout().itemAt(ind).widget()
+            if state in ("ok", "invalid", "collision"):
+                item.setProperty('state', state)
+            item.style().unpolish(item)
+            item.style().polish(item)
+            item.update()

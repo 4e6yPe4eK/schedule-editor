@@ -2,6 +2,7 @@ import ctypes
 import json
 import sys
 from PyQt5.QtWidgets import (QApplication, QFileDialog, QMainWindow, QAction, QMessageBox)
+from PyQt5.QtCore import QFile
 
 from widgets import WidgetForScrolling
 
@@ -15,6 +16,8 @@ class MainWindow(QMainWindow):
 
         self.filename = None
         self.last_data = self.dump_data()
+        with open('./style.qss') as style_file:
+            self.setStyleSheet(style_file.read())
 
     def load_ui(self):
         self.setWindowTitle("Редактор расписания")

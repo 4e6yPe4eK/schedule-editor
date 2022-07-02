@@ -1,0 +1,21 @@
+QPushButton#ColButton {
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+}
+QLineEdit#TimeShow {
+    border-style: solid;
+}
+QWidget {
+    font-size: 10pt;
+}
+QWidget[state='ok'] {
+    background-color: white;
+}
+QWidget[state='invalid'] {
+    background-color: cyan;
+}
+QWidget[state='collision'] {
+    background-color: red;
+}
+QComboBox#FilledComboBox {border-style: solid; background-color: white;}
