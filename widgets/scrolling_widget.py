@@ -8,6 +8,8 @@ logging.basicConfig(filename='log.log')
 
 def parse_time(time: str) -> tuple:
     try:
+        if len(time) < 11:
+            raise ValueError
         time_start, time_end = time.split('-')
 
         time_start = time_start.split(':')
@@ -99,6 +101,7 @@ class WidgetForScrolling(QScrollArea):
                 layout = self.layout.itemAt(self.layout.count() - 4)
                 for j in range(schedule['tables'][i]['groupsNum']):
                     layout.add_col(None, schedule['tables'][i]['groups'][j], schedule['tables'][i]['times'])
+            self.global_check()
 
     def add_row(self):
         self.edited = True
@@ -150,6 +153,8 @@ class WidgetForScrolling(QScrollArea):
         data = self.dump_data()
         classrooms, teachers = [], []
         for table_ind, table in enumerate(data['tables']):
+            if table['groupsNum'] == 0:
+                continue
             times = table['times']
             table_widget: RowWithTablesLayout = self.layout.itemAt(2 * table_ind)
             for group_ind, group in enumerate(table['groups']):
@@ -161,7 +166,7 @@ class WidgetForScrolling(QScrollArea):
                             widget.set_state('ok')
                     time_start, time_end = parse_time(times[row_ind])
                     if time_start is None:
-                        return
+                        continue
                     classroom = row['classroom']
                     teacher = row['teacher']
                     if time_start < time_end:

@@ -1,0 +1,15 @@
+table {
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    font-size: 7px;
+    font-family: "Times New Roman", serif;
+}
+
+td, th {
+    border-collapse: collapse;
+    border: 0.5px solid #333;
+}
+
+th {
+    border: 1.5px solid #333;
+}

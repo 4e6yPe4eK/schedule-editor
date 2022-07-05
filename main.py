@@ -2,9 +2,9 @@ import ctypes
 import json
 import sys
 from PyQt5.QtWidgets import (QApplication, QFileDialog, QMainWindow, QAction, QMessageBox)
-from PyQt5.QtCore import QFile
 
 from widgets import WidgetForScrolling
+from exporter import SchToHtml
 
 
 class MainWindow(QMainWindow):
@@ -55,10 +55,15 @@ class MainWindow(QMainWindow):
         save_as_file_action.setShortcut("Ctrl+Shift+S")
         save_as_file_action.triggered.connect(self.save_as_file)
 
+        export_to_pdf_action = QAction("Экспорт в PDF...", self)
+        export_to_pdf_action.setShortcut("Ctrl+E")
+        export_to_pdf_action.triggered.connect(self.export_to_pdf)
+
         file_menu.addAction(create_file_action)
         file_menu.addAction(open_file_action)
         file_menu.addAction(save_file_action)
         file_menu.addAction(save_as_file_action)
+        file_menu.addAction(export_to_pdf_action)
 
     def save_as_file(self):
         dialog = QFileDialog()
@@ -128,6 +133,17 @@ class MainWindow(QMainWindow):
             elif ret == QMessageBox.Cancel:
                 return True
         return False
+
+    def export_to_pdf(self):
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.AnyFile)
+        filename, trash = dialog.getSaveFileName(filter="PDF-файл (*.pdf)")
+        if not filename:
+            return False
+        data = self.dump_data()
+        SchToHtml(data).save_to_pdf(filename)
+        self.statusBar().showMessage("Экспорт завершен успешно", 3000)
+        return True
 
     def get_config(self):
         return {}
